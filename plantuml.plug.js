@@ -2,5 +2,5 @@ var Tt=Object.create;var nt=Object.defineProperty;var Lt=Object.getOwnPropertyDe
         document.addEventListener("click", () => {
             api({type: "blur"});
         });
-    `;async render(T){let X=await et.getConfig("plantuml",k.DEFAULT_CONFIG),x=ct.fromConfig(X),E=T;return x?E=await x.render(T):console.error("silverbullet-plantuml: Configure either serverURL or executable"),{html:`<pre id="plantuml">${E}</pre>`,script:k.CLICK_SCRIPT}}};function St(k){return new ht().render(k)}var Ct={plantumlWidget:St},At={name:"plantuml",functions:{plantumlWidget:{path:"./plantuml.ts:widget",codeWidget:"plantuml"},requiredPermissions:["shell","fetch"]},assets:{}},qr={manifest:At,functionMapping:Ct};mt(Ct,At,self.postMessage);export{qr as plug};
+    `;async render(T){let X=await et.getConfig("plantuml",k.DEFAULT_CONFIG),x=ct.fromConfig(X),E=T;return x?E=await x.render(T):console.error("silverbullet-plantuml: Configure either serverURL or executable"),{html:`<pre id="plantuml">${E}</pre>`,script:k.CLICK_SCRIPT}}};function St(k){return new ht().render(k)}var Ct={plantumlWidget:St},At={name:"plantuml",requiredPermissions:["shell","fetch"],functions:{plantumlWidget:{path:"./plantuml.ts:widget",codeWidget:"plantuml"}},assets:{}},qr={manifest:At,functionMapping:Ct};mt(Ct,At,self.postMessage);export{qr as plug};
 //# sourceMappingURL=plantuml.plug.js.map
