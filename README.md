@@ -3,13 +3,26 @@
 A [SilverBullet](https://silverbullet.md) plug that renders ` ```plantuml ` code blocks as inline SVG diagrams. 
 Diagrams can be rendered either through a remote PlantUML server (default) or via a local PlantUML executable.
 
-# Usage
+## Installation
 
-Check the [PLUG.md](PLUG.md) for the installation, configuration & usage of the plug.
+Install via SilverBullet's Library Manager:
 
-# Development
+1. Open the command palette and run `Library: Install`.
+2. Paste the URI of this plug's `PLUG.md`:
 
-## Prepare development environment
+```
+https://github.com/confirm/silverbullet-plantuml/blob/main/PLUG.md
+```
+
+The library page is installed at `Library/confirm/PlantUML` in your space.
+
+## Usage
+
+Check the [PLUG.md](PLUG.md) for the configuration & usage of the plug.
+
+## Development
+
+### Prepare development environment
 
 Install Node.js dependencies via `make`:
 
@@ -30,7 +43,7 @@ To clean the working tree:
 make clean
 ```
 
-## Build
+### Build
 
 Build the plug via `make`:
 

@@ -11,19 +11,6 @@ files:
 
 Renders ` ```plantuml ` fenced code blocks as inline SVG diagrams.
 
-## Installation
-
-Install via SilverBullet's Library Manager:
-
-1. Open the command palette and run `Library: Install`.
-2. Paste the URI of this plug's `PLUG.md`:
-
-```
-https://github.com/confirm/silverbullet-plantuml/blob/main/PLUG.md
-```
-
-The library page is installed at `Library/confirm/PlantUML` in your space.
-
 ## Configuration
 
 Configure the plug from your SilverBullet `CONFIG` page using Space-Lua's `config.set()`.  
@@ -39,11 +26,11 @@ config.set("plantuml.serverURL", "https://plantuml.com/plantuml/")
 
 Point this at your own PlantUML server if you don't want to send diagram source to a third party.
 
-> [!IMPORTANT] URL path
+> [!WARNING] URL path  
 > Some PlantUML servers serve the UMLs on either the root path (i.e. `/svg/…`), or on the `plantuml/` path (i.e. `/plantuml/svg/…`) – configure it accordingly.  
 > When using the [offical plantuml/plantuml-server](https://hub.docker.com/r/plantuml/plantuml-server) Docker image, the `plantuml/` URL path must be omitted.
 
-> [!NOTE] Permissions
+> [!NOTE] Permissions  
 > Requires the `fetch` permission (already declared in `plantuml.plug.yml`).
 
 ### Local executable
@@ -62,7 +49,7 @@ A minimal wrapper script:
 echo "$1" | base64 -d | /usr/local/bin/plantuml -tsvg -pipe
 ```
 
-> [!NOTE] Permissions
+> [!NOTE] Permissions  
 > Requires the `shell` permission (already declared in `plantuml.plug.yml`).
 
 ## Usage
