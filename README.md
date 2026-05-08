@@ -39,5 +39,5 @@ make build
 ```
 
 > [!NOTE]
-> This produces `plantuml.plug.js`.  
+> This produces `plantuml.plug.js` & `plantuml.plug.js.map`.  
 > SilverBullet syncs the file automatically — run `Plugs: Reload` in the command palette to reactivate after a rebuild.
