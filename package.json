@@ -1,0 +1,12 @@
+{
+  "name": "silverbullet-plantuml",
+  "version": "1.0.0",
+  "private": false,
+  "scripts": {
+    "build": "npx plug-compile plantuml.plug.yml"
+  },
+  "dependencies": {
+    "@silverbulletmd/silverbullet": ">=2.7.0",
+    "plantuml-encoder": "^1.4.0"
+  }
+}

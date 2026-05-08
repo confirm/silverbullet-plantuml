@@ -1,0 +1,12 @@
+---
+name: plantuml
+
+functions:
+
+  plantumlWidget:
+    path: ./plantuml.ts:widget
+    codeWidget: plantuml
+
+  requiredPermissions:
+    - shell
+    - fetch

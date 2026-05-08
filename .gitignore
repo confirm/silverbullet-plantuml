@@ -1,0 +1,5 @@
+# F* NPM! Not going to check in "cache" files!
+package-lock.json
+
+# NPM modules should never be checked in.
+node_modules/
