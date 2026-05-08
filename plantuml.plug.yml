@@ -1,12 +1,11 @@
 ---
 name: plantuml
 
-functions:
+requiredPermissions:
+  - shell
+  - fetch
 
+functions:
   plantumlWidget:
     path: ./plantuml.ts:widget
     codeWidget: plantuml
-
-  requiredPermissions:
-    - shell
-    - fetch
