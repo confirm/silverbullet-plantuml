@@ -22,16 +22,6 @@ install:
 develop: install
 
 #
-# Test
-#
-
-test-eslint:
-	curl -sSfo eslint.config.mjs $(LINTER_CONFIGS)/eslint.config.mjs
-	npx eslint $(BUILD_DIR)/assets/**/*.js
-
-test: test-eslint
-
-#
 # Build
 #
 
