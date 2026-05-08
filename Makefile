@@ -1,15 +1,8 @@
-LINTER_CONFIGS = https://gitlab.confirm.ch/confirm/dev-configs/-/raw/main/linter
-
 #
 # Cleanup
 #
 
-clean: clean-test clean-node
-
-clean-test:
-	rm -vrf eslint.config.mjs
-
-clean-node:
+clean:
 	rm -vrf node_modules package-lock.json
 
 #
@@ -25,5 +18,14 @@ develop: install
 # Build
 #
 
-build:
+bump-version:
+	npm version --no-git-tag-version minor
+	@VERSION=$$(node -p "require('./package.json').version") && \
+		sed -i.bak "s/^version: .*/version: $$VERSION/" PLUG.md && \
+		rm PLUG.md.bak && \
+		echo "Bumped to $$VERSION"
+
+plug-js:
 	npm run build
+
+build: plug-js bump-version

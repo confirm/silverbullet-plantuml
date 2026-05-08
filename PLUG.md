@@ -3,7 +3,7 @@ name: Library/confirm/PlantUML
 tags: meta/library
 description: Render PlantUML diagrams inline as SVG via a PlantUML server or local executable.
 author: confirm IT
-version: 1.0.0
+version: 1.1.0
 files:
 - plantuml.plug.js
 ---
