@@ -29,7 +29,7 @@ Point this at your own PlantUML server if you don't want to send diagram source 
 
 > [!WARNING]
 > **URL path:**  
-> Some PlantUML servers serve the UMLs on either the root path (i.e. `/svg/…`), or on the `plantuml/` path (i.e. `/plantuml/svg/…`) – configure it accordingly.  
+> Some PlantUML servers serve the UMLs on either the root path (i.e. `/svg/…`), or on the `plantuml/` path (i.e. `/plantuml/svg/…`) – configure it accordingly.
 > When using the [offical plantuml/plantuml-server](https://hub.docker.com/r/plantuml/plantuml-server) Docker image, the `plantuml/` URL path must be omitted.
 
 > [!NOTE]
