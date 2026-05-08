@@ -160,21 +160,11 @@ class PlantUmlWidget {
     };
 
     /**
-     * Client-side script injected with every widget. Clicking anywhere blurs
-     * the widget so SilverBullet exits the embedded view back to source mode.
-     */
-    private static readonly CLICK_SCRIPT = `
-        document.addEventListener("click", () => {
-            api({type: "blur"});
-        });
-    `;
-
-    /**
      * Render a PlantUML code block to a SilverBullet widget payload.
      *
      * @param bodyText The raw contents of the ```plantuml code block.
      * @returns An object with `html` (the rendered SVG wrapped in a `<pre>`)
-     *          and `script` (the click-to-blur handler).
+     *          and `script` (a click-to-blur handler that returns to source mode).
      */
     async render(bodyText: string): Promise<{ html: string; script: string }> {
         const config = await system.getConfig<PlantUmlConfig>(
@@ -192,7 +182,11 @@ class PlantUmlWidget {
 
         return {
             html: `<pre id="plantuml">${result}</pre>`,
-            script: PlantUmlWidget.CLICK_SCRIPT,
+            script: `
+                document.addEventListener("click", () => {
+                    api({type: "blur"});
+                });
+            `,
         };
     }
 }
