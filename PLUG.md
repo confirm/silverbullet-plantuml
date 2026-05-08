@@ -27,11 +27,13 @@ config.set("plantuml.serverURL", "https://plantuml.com/plantuml/")
 
 Point this at your own PlantUML server if you don't want to send diagram source to a third party.
 
-> [!WARNING] URL path  
+> [!WARNING]
+> **URL path:**  
 > Some PlantUML servers serve the UMLs on either the root path (i.e. `/svg/…`), or on the `plantuml/` path (i.e. `/plantuml/svg/…`) – configure it accordingly.  
 > When using the [offical plantuml/plantuml-server](https://hub.docker.com/r/plantuml/plantuml-server) Docker image, the `plantuml/` URL path must be omitted.
 
-> [!NOTE] Permissions  
+> [!NOTE]
+> **Permissions:**  
 > Requires the `fetch` permission (already declared in `plantuml.plug.yml`).
 
 ### Local executable
@@ -50,7 +52,8 @@ A minimal wrapper script:
 echo "$1" | base64 -d | /usr/local/bin/plantuml -tsvg -pipe
 ```
 
-> [!NOTE] Permissions  
+> [!NOTE]
+> **Permissions:**  
 > Requires the `shell` permission (already declared in `plantuml.plug.yml`).
 
 ## Usage
