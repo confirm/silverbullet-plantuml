@@ -52,5 +52,5 @@ make build
 ```
 
 > [!NOTE]
-> This produces `plantuml.plug.js` & `plantuml.plug.js.map`.  
+> This produces `plantuml.plug.js` & `plantuml.plug.js.map` (i.e. `make plug-js`), and bumps the version (i.e. `make bump-version`).  
 > SilverBullet syncs the file automatically — run `Plugs: Reload` in the command palette to reactivate after a rebuild.
