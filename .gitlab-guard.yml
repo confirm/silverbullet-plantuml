@@ -1,3 +1,4 @@
 ---
 settings:
   visibility: public
+  only_allow_merge_if_pipeline_succeeds: false
