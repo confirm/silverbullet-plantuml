@@ -30,19 +30,19 @@ interface PlantUmlConfig {
 /**
  * Base class for PlantUML rendering strategies.
  *
- * Subclasses implement {@link render} to turn a UML source string into an SVG
- * string. Errors are funneled through {@link handleError} so that a failed
- * render returns a human-readable message instead of throwing — the result is
- * embedded directly into the widget's HTML.
+ * Subclasses implement {@link renderHtml} to turn UML source into a chunk of
+ * HTML for the widget body. Errors are funneled through {@link handleError}
+ * so a failed render returns a human-readable message instead of throwing —
+ * the result is embedded directly into the widget's HTML.
  */
 abstract class PlantUmlRenderer {
     /**
-     * Render PlantUML source to an SVG string.
+     * Render PlantUML source to a self-contained HTML fragment.
      *
      * @param uml Raw PlantUML source (the body of the code block).
-     * @returns SVG markup on success, or an error message on failure.
+     * @returns HTML markup on success, or an error message on failure.
      */
-    abstract render(uml: string): Promise<string>;
+    abstract renderHtml(uml: string): Promise<string>;
 
     /**
      * Log an error and convert it to a string for inline display.
@@ -61,7 +61,9 @@ abstract class PlantUmlRenderer {
  * `shell.run` syscall. Requires the `shell` permission in `plantuml.plug.yml`.
  *
  * The UML source is base64-encoded before being passed as the sole argument,
- * matching the contract expected by typical PlantUML wrapper scripts.
+ * matching the contract expected by typical PlantUML wrapper scripts. The
+ * executable must print the resulting SVG to stdout, which is inlined into
+ * the widget.
  */
 class LocalRenderer extends PlantUmlRenderer {
     /**
@@ -71,22 +73,29 @@ class LocalRenderer extends PlantUmlRenderer {
         super();
     }
 
-    async render(uml: string): Promise<string> {
+    async renderHtml(uml: string): Promise<string> {
         try {
             const encoded = btoa(uml);
             const { stdout, stderr } = await shell.run(this.executable, [encoded]);
             if (stderr) console.log(stderr);
-            return stdout;
+            return `<pre id="plantuml">${stdout}</pre>`;
         } catch (error) {
-            return this.handleError(error);
+            return `<pre id="plantuml">${this.handleError(error)}</pre>`;
         }
     }
 }
 
 /**
- * Renders diagrams by sending the encoded UML to a PlantUML HTTP server and
- * fetching the resulting SVG. Requires the `fetch` permission in
- * `plantuml.plug.yml`.
+ * Renders diagrams against a remote PlantUML HTTP server.
+ *
+ * The plug does **not** fetch the SVG itself — it only builds the URL and
+ * emits an `<img>` tag pointing at it. The browser then loads the asset
+ * directly, which means:
+ *
+ *   - SilverBullet's server-side HTTP proxy is bypassed (important when the
+ *     PlantUML server is gated by mTLS — the user's browser presents the
+ *     client cert, not the SilverBullet server).
+ *   - No `fetch` permission is needed at runtime for server mode.
  *
  * The UML is encoded with `plantuml-encoder` (PlantUML's custom DEFLATE +
  * base64 variant), not plain base64.
@@ -112,17 +121,12 @@ class ServerRenderer extends PlantUmlRenderer {
         return `${this.serverURL}${sep}svg/${encoded}`;
     }
 
-    async render(uml: string): Promise<string> {
+    renderHtml(uml: string): Promise<string> {
         try {
             const url = this.buildUrl(uml);
-            console.log("silverbullet-plantuml: requesting", url);
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return await response.text();
+            return Promise.resolve(`<img id="plantuml" src="${url}" alt="PlantUML diagram">`);
         } catch (error) {
-            return this.handleError(error);
+            return Promise.resolve(`<pre id="plantuml">${this.handleError(error)}</pre>`);
         }
     }
 }
@@ -150,8 +154,8 @@ class RendererFactory {
 
 /**
  * Top-level orchestrator that loads config, dispatches to a renderer, and
- * wraps the resulting SVG in the HTML/script payload SilverBullet expects
- * from a code widget.
+ * wraps the rendered HTML in the payload SilverBullet expects from a code
+ * widget.
  */
 class PlantUmlWidget {
     /** Fallback used when the user has no `plantuml` config entry at all. */
@@ -163,8 +167,8 @@ class PlantUmlWidget {
      * Render a PlantUML code block to a SilverBullet widget payload.
      *
      * @param bodyText The raw contents of the ```plantuml code block.
-     * @returns An object with `html` (the rendered SVG wrapped in a `<pre>`)
-     *          and `script` (a click-to-blur handler that returns to source mode).
+     * @returns An object with `html` (the rendered diagram) and `script`
+     *          (a click-to-blur handler that returns to source mode).
      */
     async render(bodyText: string): Promise<{ html: string; script: string }> {
         const config = await system.getConfig<PlantUmlConfig>(
@@ -173,15 +177,16 @@ class PlantUmlWidget {
         );
         const renderer = RendererFactory.fromConfig(config);
 
-        let result = bodyText;
+        let html: string;
         if (renderer) {
-            result = await renderer.render(bodyText);
+            html = await renderer.renderHtml(bodyText);
         } else {
             console.error("silverbullet-plantuml: Configure either serverURL or executable");
+            html = `<pre id="plantuml">${bodyText}</pre>`;
         }
 
         return {
-            html: `<pre id="plantuml">${result}</pre>`,
+            html,
             script: `
                 document.addEventListener("click", () => {
                     api({type: "blur"});
